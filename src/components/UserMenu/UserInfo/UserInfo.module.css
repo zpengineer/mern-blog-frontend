@@ -1,0 +1,19 @@
+.userInfo {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.userWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+}
+
+.name {
+  margin-bottom: 4px;
+  font-size: 18px;
+}
+
+.time {
+  font-size: 14px;
+}

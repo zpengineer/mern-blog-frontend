@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { register } from 'redux/authorization/auth-operations';
-
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,11 +12,15 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 
+import { useRegisterMutation } from 'redux/authorization/authApi';
+import { registerUser } from 'redux/authorization/auth-slice';
+
 const Register = () => {
+  const dispatch = useDispatch();
   const [fullName, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const dispatch = useDispatch();
+  const [register] = useRegisterMutation();
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -38,10 +40,15 @@ const Register = () => {
     }
   };
 
-  const onSubmitRegister = e => {
+  const onSubmitRegister = async e => {
     e.preventDefault();
 
-    dispatch(register({ fullName, email, password }));
+    try {
+      const user = await register({ fullName, email, password });
+      dispatch(registerUser(user));
+    } catch (err) {
+      console.log(err);
+    }
 
     setName('');
     setEmail('');

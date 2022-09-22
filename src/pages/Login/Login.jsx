@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { logIn } from 'redux/authorization/auth-operations';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -12,10 +11,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 
+import { useLoginMutation } from 'redux/authorization/authApi';
+import { logIn } from 'redux/authorization/auth-slice';
+
 const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [login] = useLoginMutation();
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -35,7 +38,12 @@ const Login = () => {
   const onSubmitLogin = async e => {
     e.preventDefault();
 
-    dispatch(logIn({ email, password }));
+    try {
+      const user = await login({ email, password });
+      dispatch(logIn(user));
+    } catch (err) {
+      console.log(err);
+    }
 
     setEmail('');
     setPassword('');

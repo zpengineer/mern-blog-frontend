@@ -11,24 +11,26 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import authSlice from './authorization/auth-slice';
+import { baseApi } from './baseApi';
+import authReducer from './authorization/auth-slice';
 
 const persistConfig = {
-  key: 'token',
+  key: 'auth',
   storage,
   whitelist: ['token'],
 };
 
 export const store = configureStore({
   reducer: {
-    auth: persistReducer(persistConfig, authSlice),
+    auth: persistReducer(persistConfig, authReducer),
+    [baseApi.reducerPath]: baseApi.reducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(),
+    }).concat(baseApi.middleware),
 });
 
 export const persistor = persistStore(store);

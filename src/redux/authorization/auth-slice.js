@@ -1,37 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { register, logIn, logOut, fetchCurrentUser } from './auth-operations';
 
 const initialState = {
-  user: { name: null, email: null },
+  user: { id: null, name: null, email: null, avatar: null },
   token: null,
   isLoggedIn: false,
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: 'authSlice',
   initialState,
-  extraReducers: {
-    [register.fulfilled](state, { payload }) {
-      state.user = { name: payload.fullName, email: payload.email };
-      state.token = payload.token;
+  reducers: {
+    registerUser: (state, { payload }) => {
+      const { name, email, token } = payload.data?.user;
+      console.log(payload.data);
+      state.user = { name: name, email: email };
+      state.token = token;
       state.isLoggedIn = true;
     },
-    [logIn.fulfilled](state, { payload }) {
-      console.log(payload);
-      state.user = { name: payload.fullName, email: payload.email };
-      state.token = payload.token;
+    logIn: (state, { payload }) => {
+      const { name, email, token } = payload.data?.user;
+      console.log(payload.data);
+      state.user = { name: name, email: email };
+      state.token = token;
       state.isLoggedIn = true;
     },
-    [logOut.fulfilled](state, _) {
-      state.user = { name: null, email: null };
+    logOut: (state, _) => {
+      state.user = { id: null, name: null, email: null };
       state.token = null;
       state.isLoggedIn = false;
     },
-    [fetchCurrentUser.fulfilled](state, { payload }) {
-      state.user = { name: payload.fullName, email: payload.email };
+    refreshUser: (state, { payload }) => {
+      const { id, name, email, avatarURL } = payload?.user;
+      state.user = { id: id, name: name, email: email, avatar: avatarURL };
       state.isLoggedIn = true;
     },
   },
 });
 
+export const { registerUser, logIn, logOut, refreshUser } = authSlice.actions;
 export default authSlice.reducer;

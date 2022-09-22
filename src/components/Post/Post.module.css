@@ -1,0 +1,128 @@
+.container:not(:last-child) {
+  margin-bottom: 18px;
+}
+
+.cardHeader {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cardImage {
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0.1rem 1rem rgba(0, 0, 0, 0.1);
+  border-radius: 1em;
+  background: #fafafa;
+}
+
+.cardWrapper {
+  padding: 1rem;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+}
+
+.tagItem {
+  align-self: flex-start;
+  padding: 0.25em 0.75em;
+  border-radius: 1em;
+  font-size: 0.95rem;
+  background: #56ccf2;
+  background: linear-gradient(to bottom, #2f80ed, #56ccf2);
+  color: #fafafa;
+}
+
+.title {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.cardFooter {
+  display: flex;
+}
+
+.tagList {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.tagItem:not(:last-child) {
+  margin-right: 8px;
+}
+
+.tagLink {
+  text-decoration: none;
+  color: #fafafa;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: #000;
+}
+
+.listFooter {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.itemFooter {
+  display: flex;
+}
+
+.itemFooter:not(:last-child) {
+  margin-right: 12px;
+}
+
+.icon {
+  margin-right: 4px;
+}
+
+.editList {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 15;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.editItem {
+  display: block;
+  padding: 4px;
+  background-color: hsla(360, 100%, 100%, 0.45);
+  border-radius: 4px;
+}
+
+.editItem:not(:last-child) {
+  margin-right: 12px;
+}
+
+.text {
+  margin: 0;
+  padding: 0;
+}
+
+.buttonDelete {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}

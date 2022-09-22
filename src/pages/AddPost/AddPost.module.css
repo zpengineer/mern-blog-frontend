@@ -1,0 +1,56 @@
+.image {
+  width: 100%;
+}
+
+.tags {
+  margin: 15px 0;
+}
+
+.editor {
+  margin: 6px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.uploadWrapper {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.uploadImage {
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+
+  height: 400px;
+  overflow: hidden;
+  margin-bottom: 16px;
+
+  border-radius: 16px;
+}
+
+.image {
+  max-width: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.delete {
+  display: block;
+  border-radius: 6px;
+  padding: 4px;
+
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  color: #a60000;
+  cursor: pointer;
+}
+
+.delete:hover {
+  color: #ff0000;
+}

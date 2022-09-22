@@ -5,7 +5,7 @@ import RecentComments from './RecentComments';
 
 const SideBar = () => {
   return (
-    <Grid item xs={16} md={6} sx={{ padding: 0 }}>
+    <Grid xs={16} md={6} sx={{ paddingTop: 0, paddingLeft: 2 }}>
       <PostTags />
       <RecentComments />
     </Grid>
