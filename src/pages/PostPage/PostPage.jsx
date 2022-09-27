@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
@@ -10,8 +11,6 @@ const PostPage = () => {
   const { postId } = useParams();
   const userId = useSelector(getUserId);
   const { data, isSuccess } = useGetOnePostQuery(postId);
-
-  console.log(data);
 
   return (
     <>

@@ -10,6 +10,7 @@ import Login from 'pages/Login';
 import Register from 'pages/Register';
 import PostPage from 'pages/PostPage';
 import AddPost from 'pages/AddPost';
+import TagPostsPage from 'pages/TagPostsPage/TagPostsPage';
 
 import { useFetchCurrentUserQuery } from 'redux/authorization/authApi';
 import { refreshUser } from 'redux/authorization/auth-slice';
@@ -30,8 +31,9 @@ export const App = () => {
       <Routes>
         <Route path="/" element={<Home />}>
           <Route index element={<RelevantPosts />} />
-          <Route path="/popular" element={<PopularPosts />} />
-          <Route path="/posts/:postId/*" element={<PostPage />} />
+          <Route path="popular" element={<PopularPosts />} />
+          <Route path="posts/:postId/*" element={<PostPage />} />
+          <Route path="tags/:tag/*" element={<TagPostsPage />} />
         </Route>
 
         <Route path="/add-post" element={<AddPost />} />

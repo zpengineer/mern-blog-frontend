@@ -1,33 +1,42 @@
 import { NavLink } from 'react-router-dom';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 
-const SecondaryNav = () => {
+import style from './SecondaryNav.module.css';
+
+const SecondaryNav = ({ disabledNav }) => {
   return (
     <>
-      <List
-        sx={{
-          width: '100%',
-          maxWidth: 210,
-          display: 'flex',
-          padding: '0',
-          margin: '0',
-          paddingTop: 1,
-        }}
+      <nav
+        className={style.navHeader}
+        style={{ display: disabledNav ? 'none' : 'flex' }}
       >
-        <ListItem sx={{ padding: '0', margin: '0' }}>
-          <Button component={NavLink} to="/" color="secondary">
-            Relevant
-          </Button>
-        </ListItem>
-
-        <ListItem sx={{ padding: '0', margin: '0' }}>
-          <Button component={NavLink} to="/popular" color="secondary">
-            Popular
-          </Button>
-        </ListItem>
-      </List>
+        <ul className={style.navList}>
+          <li className={style.navItem}>
+            <Button
+              component={NavLink}
+              to="/"
+              sx={{
+                color: '#58006E',
+                '&:hover': { backgroundColor: '#ECD0F3' },
+              }}
+            >
+              Relevant
+            </Button>
+          </li>
+          <li className={style.navItem}>
+            <Button
+              component={NavLink}
+              to="popular"
+              sx={{
+                color: '#58006E',
+                '&:hover': { backgroundColor: '#ECD0F3' },
+              }}
+            >
+              Popular
+            </Button>
+          </li>
+        </ul>
+      </nav>
     </>
   );
 };

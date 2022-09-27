@@ -9,6 +9,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { getUserId } from 'redux/authorization/auth-selectors';
 import { useDeletePostMutation } from 'redux/posts/postsApi';
 import UserInfo from 'components/UserMenu/UserInfo';
+import Comments from 'components/Comments';
 import PostsSkeleton from 'components/Skeleton/Skeleton';
 import style from './Post.module.css';
 
@@ -28,7 +29,7 @@ const Post = ({ post, children, isFullPost }) => {
   return (
     <div className={style.container}>
       <div className={style.card}>
-        <div className={style.cardHeader}>
+        <div className={isFullPost ? style.cardHeaderFull : style.cardHeader}>
           <img
             src={post.imgUrl}
             alt="card__image"
@@ -61,14 +62,14 @@ const Post = ({ post, children, isFullPost }) => {
               {post?.tags?.map(tag => (
                 <li className={style.tagItem}>
                   <NavLink
-                    to="#"
+                    to={`/tags/${tag}`}
                     className={style.tagLink}
                   >{`#${tag}`}</NavLink>
                 </li>
               ))}
             </ul>
             <h3 className={style.title}>
-              <NavLink to={`posts/${post._id}`} className={style.titleLink}>
+              <NavLink to={`/posts/${post._id}`} className={style.titleLink}>
                 {post.title}
               </NavLink>
             </h3>
@@ -89,13 +90,14 @@ const Post = ({ post, children, isFullPost }) => {
                 <span className={style.icon}>
                   <CommentIcon fontSize="small" />
                 </span>
-                <p className={style.text}>{post.viewsCount}</p>
+                <p className={style.text}>{post?.comments?.length}</p>
               </li>
             </ul>
           </div>
           {children && <div className={style.content}>{children}</div>}
         </div>
       </div>
+      {isFullPost && <Comments />}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 
@@ -7,7 +7,7 @@ import { useGetAllTagsQuery } from 'redux/posts/postsApi';
 const PostTags = () => {
   const { data, isSuccess } = useGetAllTagsQuery();
   const postTags = data?.posts?.map(tag => (
-    <Link href="#" variant="h6">{`#${tag}`}</Link>
+    <Link to={`/tags/${tag}`} variant="h6">{`#${tag}`}</Link>
   ));
 
   return (
