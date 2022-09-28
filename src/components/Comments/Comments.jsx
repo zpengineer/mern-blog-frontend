@@ -1,5 +1,3 @@
-import { useSelector } from 'react-redux';
-
 import CommentsForm from './CommentsForm';
 import CommentsList from './CommentsList';
 
