@@ -1,11 +1,4 @@
-// import { createEntityAdapter, createSelector } from '@reduxjs/toolkit';
 import { baseApi } from 'redux/baseApi';
-
-// const postComments = createEntityAdapter({
-//   selectId: comment => comment._id,
-// });
-
-// const initialState = postComments.getInitialState();
 
 export const postsApi = baseApi.injectEndpoints({
   endpoints: builder => ({
@@ -19,9 +12,6 @@ export const postsApi = baseApi.injectEndpoints({
     }),
     getOnePost: builder.query({
       query: id => ({ url: `api/posts/${id}` }),
-      // transformResponse: responseData => {
-      //   return postComments.setAll(initialState, responseData);
-      // },
     }),
     getAllTags: builder.query({
       query: () => 'api/posts/tags',
@@ -46,11 +36,16 @@ export const postsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['blog'],
     }),
+    addComment: builder.mutation({
+      query: ({ content, postId }) => ({
+        url: `api/posts/${postId}/comment`,
+        method: 'POST',
+        body: { content },
+      }),
+      invalidatesTags: ['blog'],
+    }),
   }),
 });
-
-// export const { selectAll: getAllComments, selectById: commentId } =
-//   postComments.getSelectors(state => console.log(state));
 
 export const {
   useRelevantPostsQuery,
@@ -60,4 +55,5 @@ export const {
   useDeletePostMutation,
   useGetAllTagsQuery,
   useGetAllPostsByTagQuery,
+  useAddCommentMutation,
 } = postsApi;
