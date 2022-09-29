@@ -10,7 +10,7 @@ import Paper from '@mui/material/Paper';
 import { useGetAllCommentsQuery } from 'redux/comments/commentsApi';
 
 const RecentComments = () => {
-  const { data, isSuccess, isLoading } = useGetAllCommentsQuery();
+  const { data, isSuccess } = useGetAllCommentsQuery();
 
   // console.log(data.comments);
   return (
