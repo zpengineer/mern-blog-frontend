@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
-import { useAddCommentMutation } from 'redux/posts/postsApi';
+import { useAddCommentMutation } from 'redux/comments/commentsApi';
 
 import style from './CommentsForm.module.css';
 

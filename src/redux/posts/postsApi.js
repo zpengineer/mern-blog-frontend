@@ -36,14 +36,6 @@ export const postsApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['blog'],
     }),
-    addComment: builder.mutation({
-      query: ({ content, postId }) => ({
-        url: `api/posts/${postId}/comment`,
-        method: 'POST',
-        body: { content },
-      }),
-      invalidatesTags: ['blog'],
-    }),
   }),
 });
 
@@ -55,5 +47,4 @@ export const {
   useDeletePostMutation,
   useGetAllTagsQuery,
   useGetAllPostsByTagQuery,
-  useAddCommentMutation,
 } = postsApi;

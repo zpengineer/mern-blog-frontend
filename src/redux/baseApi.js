@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
 
 export const baseApi = createApi({
   reducerPath: 'baseApi',
-  tagTypes: ['user', 'blog'],
+  tagTypes: ['user', 'blog', 'comments'],
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://fedorov-blog.herokuapp.com/',
     prepareHeaders: (headers, { getState }) => {

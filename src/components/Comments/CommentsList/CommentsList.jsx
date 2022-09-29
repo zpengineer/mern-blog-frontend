@@ -3,7 +3,7 @@ import style from './CommentsList.module.css';
 
 const CommentsList = ({ postComments }) => {
   const commentsItems = postComments.map(comment => (
-    <li key={comment._id} className={style.item}>
+    <li key={comment._id} id={`#${comment._id}`} className={style.item}>
       <UserInfo
         fullName={comment.owner.fullName}
         avatarURL={comment.owner.avatarURL}
