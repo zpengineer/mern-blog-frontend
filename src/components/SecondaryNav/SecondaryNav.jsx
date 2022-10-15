@@ -1,42 +1,66 @@
+import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import Button from '@mui/material/Button';
-
-import style from './SecondaryNav.module.css';
+import { Box, List, ListItem, Link, Button } from '@chakra-ui/react';
 
 const SecondaryNav = ({ disabledNav }) => {
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
   return (
     <>
-      <nav
-        className={style.navHeader}
-        style={{ display: disabledNav ? 'none' : 'flex' }}
-      >
-        <ul className={style.navList}>
-          <li className={style.navItem}>
+      <Box as="nav" display={disabledNav ? 'none' : 'flex'} marginBottom="12px">
+        <List display="flex">
+          <ListItem marginRight="8px">
             <Button
-              component={NavLink}
+              as={NavLink}
+              end
               to="/"
-              sx={{
-                color: '#58006E',
-                '&:hover': { backgroundColor: '#ECD0F3' },
+              colorScheme="pink"
+              variant="outline"
+              _activeLink={{
+                fontWeight: 'bold',
+                bg: 'pink.300',
+                color: 'white',
               }}
             >
               Relevant
             </Button>
-          </li>
-          <li className={style.navItem}>
+          </ListItem>
+          <ListItem marginRight="8px">
             <Button
-              component={NavLink}
-              to="popular"
-              sx={{
-                color: '#58006E',
-                '&:hover': { backgroundColor: '#ECD0F3' },
+              as={NavLink}
+              end
+              to="/popular"
+              colorScheme="pink"
+              variant="outline"
+              _activeLink={{
+                fontWeight: 'bold',
+                bg: 'pink.300',
+                color: 'white',
               }}
             >
               Popular
             </Button>
-          </li>
-        </ul>
-      </nav>
+          </ListItem>
+          {isLoggedIn && (
+            <ListItem>
+              <Button
+                as={NavLink}
+                end
+                to="/subscription"
+                colorScheme="pink"
+                variant="outline"
+                _activeLink={{
+                  fontWeight: 'bold',
+                  bg: 'pink.300',
+                  color: 'white',
+                }}
+              >
+                Subscription
+              </Button>
+            </ListItem>
+          )}
+        </List>
+      </Box>
     </>
   );
 };

@@ -1,26 +1,52 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+  Link,
+  useToast,
+} from '@chakra-ui/react';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 import { useRegisterMutation } from 'redux/authorization/authApi';
-import { registerUser } from 'redux/authorization/auth-slice';
 
 const Register = () => {
-  const dispatch = useDispatch();
+  const toast = useToast();
   const [fullName, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [register] = useRegisterMutation();
+  const [register, { isSuccess, isError, error }] = useRegisterMutation();
+  const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast({
+        title: `Registration successful. Now you can log into your account.`,
+        status: 'success',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }
+
+    if (isError) {
+      toast({
+        title: `${error?.data.message}`,
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }
+  }, [error?.data.message, isError, isSuccess, toast]);
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -44,8 +70,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const user = await register({ fullName, email, password });
-      dispatch(registerUser(user));
+      await register({ fullName, email, password });
     } catch (err) {
       console.log(err);
     }
@@ -56,77 +81,93 @@ const Register = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Paper sx={{ padding: '12px 24px 12px 24px', marginTop: 4 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
+    <Flex minH={'87vh'} align={'center'} justify={'center'}>
+      <Stack spacing={8} mx={'auto'} w={'lg'} py={6} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'} textAlign={'center'}>
             Sign up
-          </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={onSubmitRegister}
-            sx={{ mt: 3 }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  autoComplete="given-name"
+          </Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            to enjoy all of our cool community ✌️
+          </Text>
+        </Stack>
+        <Box
+          as="form"
+          noValidate
+          onSubmit={onSubmitRegister}
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}
+        >
+          <Stack spacing={4}>
+            <Box>
+              <FormControl id="firstName" isRequired>
+                <FormLabel>Full name</FormLabel>
+                <Input
                   name="name"
-                  required
-                  fullWidth
                   value={fullName}
                   onChange={handleChange}
-                  label="Name"
-                  autoFocus
+                  type="text"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
+              </FormControl>
+            </Box>
+            <FormControl id="email" isRequired>
+              <FormLabel>Email address</FormLabel>
+              <Input
+                name="email"
+                value={email}
+                onChange={handleChange}
+                type="email"
+              />
+            </FormControl>
+            <FormControl id="password" isRequired>
+              <FormLabel>Password</FormLabel>
+              <InputGroup>
+                <Input
                   name="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="new-password"
                   value={password}
                   onChange={handleChange}
+                  type={showPassword ? 'text' : 'password'}
                 />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: '#8266D7' }}
-            >
-              Sign Up
-            </Button>
-          </Box>
+                <InputRightElement h={'full'}>
+                  <Button
+                    variant={'ghost'}
+                    onClick={() =>
+                      setShowPassword(showPassword => !showPassword)
+                    }
+                  >
+                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
+            </FormControl>
+            <Stack spacing={10} pt={2}>
+              <Button
+                type="submit"
+                loadingText="Submitting"
+                size="lg"
+                bg={'blue.400'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.500',
+                }}
+              >
+                Sign up
+              </Button>
+            </Stack>
+            <Stack pt={6}>
+              <Text align={'center'}>
+                Already a user?
+                <Link as={NavLink} to="/login" color={'blue.400'}>
+                  Login
+                </Link>
+              </Text>
+            </Stack>
+          </Stack>
         </Box>
-      </Paper>
-    </Container>
+      </Stack>
+    </Flex>
   );
 };
 

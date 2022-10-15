@@ -1,106 +1,83 @@
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import {
+  Box,
+  Flex,
+  Stack,
+  Button,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { FiMoon, FiSun } from 'react-icons/fi';
+
 import { getUserIsLoggedIn } from 'redux/authorization/auth-selectors';
 
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-
+import SearchPostForm from './SearchPostForm';
 import UserMenu from 'components/UserMenu';
 import AuthNav from 'components/AuthNav';
-import style from './AppBar.module.css';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
-
-const mainTheme = createTheme({
-  palette: {
-    primary: {
-      main: '#8266D7',
-    },
-  },
-});
-
-const MainNav = () => {
+const MainNav = ({ isLoading }) => {
   const userIsLoggedIn = useSelector(getUserIsLoggedIn);
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <ThemeProvider theme={mainTheme}>
-        <AppBar position="static" color="primary">
-          <Toolbar>
-            <Link to="/" className={style.link}>
-              <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{
-                  display: { xs: 'none', sm: 'block' },
-                  backgroundColor: '#411277',
-                  padding: '6px 10px 6px 10px',
-                  borderRadius: '6px',
-                }}
-              >
-                GEEK
-              </Typography>
-            </Link>
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ 'aria-label': 'search' }}
-              />
-            </Search>
-            <Box sx={{ flexGrow: 1 }} />
+    <Box
+      as="header"
+      width="100%"
+      bg={useColorModeValue('gray.50', 'gray.900')}
+      color={useColorModeValue('gray.600', 'white')}
+      minH={'60px'}
+      align={'center'}
+      position="sticky"
+      top="0"
+      right="0"
+      left="0"
+      zIndex="3"
+      boxShadow="sm"
+    >
+      <Box
+        maxW="8xl"
+        marginInlineStart="auto"
+        marginInlineEnd="auto"
+        py={{ base: 2 }}
+        px={{ base: 4 }}
+      >
+        <Flex>
+          <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
+            <Button
+              as={Link}
+              display={{ base: 'none', md: 'inline-flex' }}
+              marginRight="24px"
+              fontSize={'sm'}
+              fontWeight={600}
+              color={'white'}
+              bg={'pink.400'}
+              to="/"
+              _hover={{
+                bg: 'pink.300',
+              }}
+            >
+              GEEK
+            </Button>
+            <SearchPostForm />
+          </Flex>
 
-            {userIsLoggedIn ? <UserMenu /> : <AuthNav />}
-          </Toolbar>
-        </AppBar>
-      </ThemeProvider>
+          <Flex>
+            <Stack
+              flex={{ base: 1, md: 0 }}
+              justify={'flex-end'}
+              direction={'row'}
+              spacing={5}
+            >
+              <Button onClick={toggleColorMode}>
+                {colorMode === 'light' ? <FiMoon /> : <FiSun />}
+              </Button>
+
+              {userIsLoggedIn ? <UserMenu /> : <AuthNav />}
+            </Stack>
+          </Flex>
+        </Flex>
+      </Box>
     </Box>
   );
 };

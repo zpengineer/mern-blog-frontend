@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Box, Heading, Skeleton } from '@chakra-ui/react';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 
-import { usePopularPostsQuery } from 'redux/posts/postsApi';
-
 import Post from 'components/Post';
 
-const PopularPosts = () => {
+import { useSearchPostQuery } from 'redux/posts/postsApi';
+
+const SearchPage = ({ value }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const { data, isSuccess } = usePopularPostsQuery({
+  const { data, isSuccess } = useSearchPostQuery(value, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -35,6 +35,9 @@ const PopularPosts = () => {
 
       {data?.code === 200 && (
         <>
+          <Heading as="h2" size="xl" mt={6} mb={4}>
+            Search result
+          </Heading>
           <Box>{postItems}</Box>
         </>
       )}
@@ -42,4 +45,4 @@ const PopularPosts = () => {
   );
 };
 
-export default PopularPosts;
+export default SearchPage;

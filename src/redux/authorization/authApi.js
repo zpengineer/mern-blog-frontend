@@ -37,11 +37,11 @@ export const authApi = baseApi.injectEndpoints({
           url: 'api/users/current',
           method: 'GET',
           headers: { authorization: `Bearer ${persistedState}` },
-          providesTags: ['user'],
         });
 
         return result;
       },
+      providesTags: ['avatar', 'user'],
     }),
   }),
 });

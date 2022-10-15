@@ -1,17 +1,21 @@
-import Avatar from '@mui/material/Avatar';
-import style from './UserInfo.module.css';
+import { Image, Text, HStack } from '@chakra-ui/react';
 
 const UserInfo = ({ fullName, avatarURL, createdAt }) => {
-  const time = createdAt.replace(/T/, ' ').replace(/\..+/, '');
+  const time = new Date(createdAt).toLocaleDateString();
 
   return (
-    <div className={style.userInfo}>
-      <Avatar alt={fullName} src={avatarURL} />
-      <div className={style.userWrapper}>
-        <span className={style.name}>{fullName}</span>
-        <span className={style.time}>{time}</span>
-      </div>
-    </div>
+    <HStack marginBottom="4" spacing="2" display="flex" alignItems="center">
+      <Image
+        borderRadius="full"
+        boxSize="40px"
+        objectFit="cover"
+        src={avatarURL}
+        alt={`Avatar of ${fullName}`}
+      />
+      <Text fontWeight="medium">{fullName}</Text>
+      <Text>—</Text>
+      <Text>{time}</Text>
+    </HStack>
   );
 };
 

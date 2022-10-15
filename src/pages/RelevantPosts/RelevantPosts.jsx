@@ -1,25 +1,46 @@
-import PostsSkeleton from 'components/Skeleton';
+import { useState, useEffect } from 'react';
+import { Box, Heading, Skeleton } from '@chakra-ui/react';
+import { WarningTwoIcon } from '@chakra-ui/icons';
+
 import Post from 'components/Post';
 
 import { useRelevantPostsQuery } from 'redux/posts/postsApi';
 
-import style from './RelevantPosts.module.css';
-
 const RelevantPosts = () => {
-  const { data, isSuccess, isLoading } = useRelevantPostsQuery();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const { data, isSuccess, refetch } = useRelevantPostsQuery({
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    if (isSuccess) setIsLoaded(true);
+    refetch();
+  }, [isSuccess, data, refetch]);
+
   const postItems = data?.posts?.map(post => (
-    <Post key={post._id} post={post} />
+    <Skeleton isLoaded={isLoaded} key={post._id}>
+      <Post post={post} isLoaded={isLoaded} />
+    </Skeleton>
   ));
 
-  if (isLoading) {
-    return (
-      <>
-        <PostsSkeleton />
-      </>
-    );
-  }
+  return (
+    <>
+      {data?.code === 404 && (
+        <Box textAlign="center" py={10} px={6}>
+          <WarningTwoIcon boxSize={'50px'} color={'orange.300'} />
+          <Heading as="h2" size="lg" mt={6} mb={2}>
+            {data?.message}
+          </Heading>
+        </Box>
+      )}
 
-  return <>{isSuccess && <div className={style.posts}>{postItems}</div>}</>;
+      {data?.code === 200 && (
+        <>
+          <Box>{postItems}</Box>
+        </>
+      )}
+    </>
+  );
 };
 
 export default RelevantPosts;

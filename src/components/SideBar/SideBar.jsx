@@ -1,14 +1,16 @@
-import Grid from '@mui/material/Grid';
+import { Box } from '@chakra-ui/react';
 
+import UserCard from 'components/UserMenu/UserCard';
 import PostTags from './PostTags';
 import RecentComments from './RecentComments';
 
 const SideBar = () => {
   return (
-    <Grid xs={16} md={6} sx={{ paddingTop: 0, paddingLeft: 2 }}>
+    <Box px={{ base: 4 }} maxW={'450px'} w={'full'}>
+      <UserCard />
       <PostTags />
       <RecentComments />
-    </Grid>
+    </Box>
   );
 };
 

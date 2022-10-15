@@ -1,24 +1,47 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
+import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Link,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+  useToast,
+} from '@chakra-ui/react';
 
 import { useLoginMutation } from 'redux/authorization/authApi';
-import { logIn } from 'redux/authorization/auth-slice';
 
 const Login = () => {
-  const dispatch = useDispatch();
+  const toast = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [login] = useLoginMutation();
+  const [login, { isLoading, isError, error }] = useLoginMutation();
+
+  useEffect(() => {
+    if (isLoading) {
+      toast({
+        title: `Authorization successful.`,
+        status: 'success',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }
+
+    if (isError) {
+      toast({
+        title: `Invalid email or password.`,
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }
+  }, [error?.data.message, isError, isLoading, toast]);
 
   const handleChange = e => {
     const { name, value } = e.currentTarget;
@@ -39,8 +62,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const user = await login({ email, password });
-      dispatch(logIn(user));
+      await login({ email, password });
     } catch (err) {
       console.log(err);
     }
@@ -50,62 +72,74 @@ const Login = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Paper sx={{ padding: '12px 24px 12px 24px', marginTop: 4 }}>
+    <Flex minH={'87vh'} align={'center'} justify={'center'}>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={6} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'}>Sign in to your account</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            to enjoy all of our cool{' '}
+            <Link as={NavLink} to="/" color={'blue.400'}>
+              community
+            </Link>
+            ✌️
+          </Text>
+        </Stack>
         <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
+          as="form"
+          onSubmit={onSubmitLogin}
+          noValidate
+          rounded={'lg'}
+          bg={useColorModeValue('white', 'gray.700')}
+          boxShadow={'lg'}
+          p={8}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={onSubmitLogin}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Email Address"
-              name="email"
-              value={email}
-              autoComplete="email"
-              onChange={handleChange}
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              value={password}
-              autoComplete="current-password"
-              onChange={handleChange}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: '#8266D7' }}
-            >
-              Sign In
-            </Button>
-          </Box>
+          <Stack spacing={4}>
+            <FormControl id="email">
+              <FormLabel>Email address</FormLabel>
+              <Input
+                name="email"
+                value={email}
+                type="email"
+                onChange={handleChange}
+              />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input
+                name="password"
+                value={password}
+                type="password"
+                onChange={handleChange}
+              />
+            </FormControl>
+            <Stack spacing={6}>
+              <Stack
+                direction={{ base: 'column', sm: 'row' }}
+                align={'start'}
+                justify={'space-between'}
+              >
+                <Text>
+                  If you do not have an account,{' '}
+                  <Link as={NavLink} to="/register" color={'blue.400'}>
+                    then register a new one.
+                  </Link>
+                </Text>
+              </Stack>
+              <Button
+                type="submit"
+                bg={'blue.400'}
+                color={'white'}
+                _hover={{
+                  bg: 'blue.500',
+                }}
+              >
+                Sign in
+              </Button>
+            </Stack>
+          </Stack>
         </Box>
-      </Paper>
-    </Container>
+      </Stack>
+    </Flex>
   );
 };
 

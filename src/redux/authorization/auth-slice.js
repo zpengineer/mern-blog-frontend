@@ -1,7 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { authApi } from './authApi';
 
 const initialState = {
-  user: { id: null, name: null, email: null, avatar: null },
+  user: {
+    id: null,
+    name: null,
+    email: null,
+    avatar: null,
+    following: null,
+    followers: null,
+  },
   token: null,
   isLoggedIn: false,
 };
@@ -9,33 +17,57 @@ const initialState = {
 const authSlice = createSlice({
   name: 'authSlice',
   initialState,
-  reducers: {
-    registerUser: (state, { payload }) => {
-      const { name, email, token } = payload.data?.user;
-      console.log(payload.data);
-      state.user = { name: name, email: email };
-      state.token = token;
-      state.isLoggedIn = true;
-    },
-    logIn: (state, { payload }) => {
-      const { name, email, token } = payload.data?.user;
-      console.log(payload.data);
-      state.user = { name: name, email: email };
-      state.token = token;
-      state.isLoggedIn = true;
-    },
-    logOut: (state, _) => {
-      state.user = { id: null, name: null, email: null };
+  reducers: {},
+  extraReducers: builder => {
+    //log in
+    builder.addMatcher(
+      authApi.endpoints.login.matchFulfilled,
+      (state, { payload }) => {
+        const { id, name, email, avatarURL, following, followers, token } =
+          payload?.user;
+        state.user = {
+          id: id,
+          name: name,
+          email: email,
+          avatar: avatarURL,
+          following: following,
+          followers: followers,
+        };
+        state.token = token;
+        state.isLoggedIn = true;
+      }
+    );
+    //log out user
+    builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state, _) => {
+      state.user = {
+        id: null,
+        name: null,
+        email: null,
+        avatar: null,
+        followers: null,
+        following: null,
+      };
       state.token = null;
       state.isLoggedIn = false;
-    },
-    refreshUser: (state, { payload }) => {
-      const { id, name, email, avatarURL } = payload?.user;
-      state.user = { id: id, name: name, email: email, avatar: avatarURL };
-      state.isLoggedIn = true;
-    },
+    });
+    //current user
+    builder.addMatcher(
+      authApi.endpoints.fetchCurrentUser.matchFulfilled,
+      (state, { payload }) => {
+        const { id, name, email, avatarURL, following, followers } =
+          payload?.user;
+        state.user = {
+          id: id,
+          name: name,
+          email: email,
+          avatar: avatarURL,
+          following: following,
+          followers: followers,
+        };
+        state.isLoggedIn = true;
+      }
+    );
   },
 });
 
-export const { registerUser, logIn, logOut, refreshUser } = authSlice.actions;
 export default authSlice.reducer;

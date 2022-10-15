@@ -1,104 +1,231 @@
 import { NavLink } from 'react-router-dom';
+import { useRef } from 'react';
 import { useSelector } from 'react-redux';
-
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import CommentIcon from '@mui/icons-material/Comment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import {
+  Box,
+  Heading,
+  Link,
+  Image,
+  List,
+  ListItem,
+  Text,
+  Tag,
+  Container,
+  Button,
+  Flex,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  useDisclosure,
+} from '@chakra-ui/react';
+import {
+  FiMessageCircle,
+  FiEye,
+  FiHeart,
+  FiEdit,
+  FiTrash,
+} from 'react-icons/fi';
 
 import { getUserId } from 'redux/authorization/auth-selectors';
-import { useDeletePostMutation } from 'redux/posts/postsApi';
+import {
+  useDeletePostMutation,
+  useLikePostMutation,
+} from 'redux/posts/postsApi';
 import UserInfo from 'components/UserMenu/UserInfo';
 import Comments from 'components/Comments';
-import PostsSkeleton from 'components/Skeleton/Skeleton';
-import style from './Post.module.css';
 
 const Post = ({ post, children, isFullPost }) => {
-  const [deletePost] = useDeletePostMutation();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
   const userId = useSelector(getUserId);
+  const isLikePost = post?.like.some(id => userId === id);
+  const [deletePost] = useDeletePostMutation();
+  const [likePost] = useLikePostMutation({
+    skip: isLikePost,
+  });
+
   const isUser = post.owner._id === userId;
 
-  if (!post) {
-    return (
-      <>
-        <PostsSkeleton />
-      </>
-    );
-  }
+  const handleDelete = () => {
+    deletePost(post._id);
+    onClose();
+  };
 
   return (
-    <div className={style.container}>
-      <div className={style.card}>
-        <div className={isFullPost ? style.cardHeaderFull : style.cardHeader}>
-          <img
-            src={post.imgUrl}
-            alt="card__image"
-            className={style.cardImage}
-          />
-          {isUser && (
-            <ul className={style.editList}>
-              <li className={style.editItem}>
-                <NavLink to="#">
-                  <EditIcon color="success" sx={{ fontSize: 25 }} />
-                </NavLink>
-              </li>
-
-              <li className={style.editItem}>
-                <button
-                  type="button"
-                  onClick={() => deletePost(post._id)}
-                  className={style.buttonDelete}
-                >
-                  <DeleteIcon sx={{ fontSize: 25, color: 'red' }} />
-                </button>
-              </li>
-            </ul>
-          )}
-        </div>
-        <div className={style.cardWrapper}>
-          <UserInfo {...post.owner} createdAt={post.createdAt} />
-          <div className={style.cardBody}>
-            <ul className={style.tagList}>
-              {post?.tags?.map(tag => (
-                <li className={style.tagItem}>
-                  <NavLink
-                    to={`/tags/${tag}`}
-                    className={style.tagLink}
-                  >{`#${tag}`}</NavLink>
-                </li>
-              ))}
-            </ul>
-            <h3 className={style.title}>
-              <NavLink to={`/posts/${post._id}`} className={style.titleLink}>
-                {post.title}
-              </NavLink>
-            </h3>
-          </div>
-          <div
-            className={style.cardFooter}
-            style={{ display: isFullPost ? 'none' : 'flex' }}
+    <Container
+      maxW={'7xl'}
+      margin="0"
+      padding="0"
+      marginBottom={{ base: '1', sm: '7' }}
+    >
+      <Box
+        display="flex"
+        flexDirection={{ base: 'column', sm: isFullPost ? 'column' : 'row' }}
+        justifyContent="space-between"
+      >
+        <Box
+          display="flex"
+          flex="1"
+          position="relative"
+          alignItems="center"
+          marginBottom={isFullPost ? '12px' : '0'}
+        >
+          <Box
+            width={{ base: '100%', sm: isFullPost ? '100%' : '85%' }}
+            zIndex="2"
           >
-            <ul className={style.listFooter}>
-              <li className={style.itemFooter}>
-                <span className={style.icon}>
-                  <VisibilityIcon fontSize="small" />
-                </span>
-                <p className={style.text}>{post.viewsCount}</p>
-              </li>
+            <Link
+              as={NavLink}
+              to={`/posts/${post._id}`}
+              textDecoration="none"
+              _hover={{ textDecoration: 'none' }}
+            >
+              <Image
+                borderRadius="lg"
+                src={post.imgUrl}
+                alt={post.title}
+                objectFit="contain"
+              />
+            </Link>
+          </Box>
+        </Box>
+        <Box
+          display="flex"
+          flex="1"
+          flexDirection="column"
+          justifyContent="space-between"
+          marginTop={{ base: '3', sm: '0' }}
+        >
+          <Box>
+            <Flex justifyContent="space-between">
+              <UserInfo {...post.owner} createdAt={post.createdAt} />
+              {isUser && (
+                <List display="flex">
+                  <ListItem marginRight="6px">
+                    <Button
+                      as={NavLink}
+                      to={`/posts/${post._id}/update`}
+                      colorScheme="orange"
+                      variant="ghost"
+                    >
+                      <FiEdit />
+                    </Button>
+                  </ListItem>
 
-              <li className={style.itemFooter}>
-                <span className={style.icon}>
-                  <CommentIcon fontSize="small" />
-                </span>
-                <p className={style.text}>{post?.comments?.length}</p>
-              </li>
-            </ul>
-          </div>
-          {children && <div className={style.content}>{children}</div>}
-        </div>
-      </div>
-      {isFullPost && <Comments />}
-    </div>
+                  <ListItem>
+                    <Button
+                      type="button"
+                      colorScheme="red"
+                      variant="ghost"
+                      onClick={onOpen}
+                    >
+                      <FiTrash />
+                    </Button>
+
+                    <AlertDialog
+                      isOpen={isOpen}
+                      leastDestructiveRef={cancelRef}
+                      onClose={onClose}
+                    >
+                      <AlertDialogOverlay>
+                        <AlertDialogContent>
+                          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Delete post
+                          </AlertDialogHeader>
+
+                          <AlertDialogBody>
+                            Are you sure? You can't undo this action afterwards.
+                          </AlertDialogBody>
+
+                          <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                              Cancel
+                            </Button>
+                            <Button
+                              colorScheme="red"
+                              onClick={handleDelete}
+                              ml={3}
+                            >
+                              Delete
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialogOverlay>
+                    </AlertDialog>
+                  </ListItem>
+                </List>
+              )}
+            </Flex>
+            <List display="flex">
+              {post?.tags?.map((tag, index) => (
+                <ListItem key={index} marginRight="8px">
+                  <Tag
+                    as={NavLink}
+                    to={`/tags/${tag}`}
+                    size={'md'}
+                    variant="solid"
+                    colorScheme="orange"
+                  >
+                    {`#${tag}`}
+                  </Tag>
+                </ListItem>
+              ))}
+            </List>
+
+            <Heading marginTop="1">
+              <Link
+                as={NavLink}
+                to={`/posts/${post._id}`}
+                textDecoration="none"
+                _hover={{ textDecoration: 'none' }}
+              >
+                {post.title}
+              </Link>
+            </Heading>
+          </Box>
+
+          <Box
+            display={isFullPost ? 'none' : 'flex'}
+            justifyContent="space-between"
+          >
+            <List display="flex">
+              <ListItem
+                display="flex"
+                alignItems="center"
+                marginRight="12px"
+                fontSize="18px"
+              >
+                <FiEye />
+                <Text fontWeight="medium" marginLeft="6px">
+                  {post?.viewsCount}
+                </Text>
+              </ListItem>
+              <ListItem display="flex" alignItems="center" fontSize="18px">
+                <FiMessageCircle />
+                <Text fontWeight="medium" marginLeft="6px">
+                  {post?.comments?.length}
+                </Text>
+              </ListItem>
+            </List>
+            <Box display="flex" alignItems="center" fontSize="18px">
+              <Button
+                leftIcon={<FiHeart fill={isLikePost ? 'red' : 'transparent'} />}
+                colorScheme="red"
+                variant="ghost"
+                onClick={() => likePost(post._id)}
+              >
+                {post?.like.length}
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+        {children && <Box marginTop={{ base: '3', sm: '4' }}>{children}</Box>}
+        {isFullPost && <Comments />}
+      </Box>
+    </Container>
   );
 };
 

@@ -1,31 +1,25 @@
 import { useParams } from 'react-router-dom';
+import { Box, Heading } from '@chakra-ui/react';
+
 import CommentsForm from './CommentsForm';
 import CommentsList from './CommentsList';
-import PostsSkeleton from 'components/Skeleton';
 import { useGetPostCommentsQuery } from 'redux/comments/commentsApi';
-
-import style from './Comments.module.css';
 
 const Comments = () => {
   const { postId } = useParams();
-  const {
-    data: postComments,
-    isLoading,
-    isSuccess,
-  } = useGetPostCommentsQuery(postId);
+  const { data: postComments, isSuccess } = useGetPostCommentsQuery(postId);
 
   return (
-    <section className={style.section}>
-      <header className={style.header}>
-        <h2
-          className={style.title}
-        >{`Top comments (${postComments?.comments?.length})`}</h2>
-      </header>
+    <Box marginTop={{ base: '6', sm: '8' }}>
+      <Box as="header">
+        <Heading as="h3" size="lg">{`Top comments (${
+          postComments?.code !== 404 ? postComments?.comments?.length : 0
+        })`}</Heading>
+      </Box>
 
       <CommentsForm />
-      {isLoading && <PostsSkeleton />}
-      {isSuccess && <CommentsList postComments={postComments?.comments} />}
-    </section>
+      {isSuccess && <CommentsList postComments={postComments} />}
+    </Box>
   );
 };
 

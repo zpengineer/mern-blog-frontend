@@ -1,17 +1,31 @@
-import { Outlet, useParams } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
+import { Outlet, useParams, useSearchParams } from 'react-router-dom';
+import { Box } from '@chakra-ui/react';
 import SecondaryNav from 'components/SecondaryNav';
-// import style from './Main.module.css';
+import SearchPage from 'pages/SearchPage';
 
 const Main = () => {
+  let [searchParams, setSearchParams] = useSearchParams();
   const { postId, tag } = useParams();
+
+  const value = searchParams.get('query');
+
   const disabledNav = postId || tag ? true : false;
 
   return (
-    <Grid xs={16} md={10} sx={{ paddingTop: 0 }}>
-      <SecondaryNav disabledNav={disabledNav} />
-      <Outlet />
-    </Grid>
+    <Box px={{ base: 4 }} w="8xl">
+      {value && (
+        <>
+          <SearchPage value={value} />
+        </>
+      )}
+
+      {!value && (
+        <>
+          <SecondaryNav disabledNav={disabledNav} />
+          <Outlet />
+        </>
+      )}
+    </Box>
   );
 };
 

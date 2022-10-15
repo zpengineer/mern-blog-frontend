@@ -1,27 +1,35 @@
 import { Link } from 'react-router-dom';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { Button } from '@chakra-ui/react';
 
 const AuthNav = () => {
   return (
-    <Stack spacing={2} direction="row">
+    <>
       <Button
-        component={Link}
+        as={Link}
+        fontSize={'sm'}
+        fontWeight={400}
+        textTransform="uppercase"
+        variant={'link'}
         to="/login"
-        variant="text"
-        sx={{ color: '#fff' }}
       >
-        Log in
+        Sign In
       </Button>
       <Button
-        component={Link}
+        as={Link}
+        display={{ base: 'none', md: 'inline-flex' }}
+        fontSize={'sm'}
+        fontWeight={600}
+        textTransform="uppercase"
+        color={'white'}
+        bg={'pink.400'}
         to="/register"
-        variant="outlined"
-        sx={{ color: '#fff', outline: '1px solid #fff' }}
+        _hover={{
+          bg: 'pink.300',
+        }}
       >
         Create account
       </Button>
-    </Stack>
+    </>
   );
 };
 

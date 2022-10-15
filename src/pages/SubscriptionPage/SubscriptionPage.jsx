@@ -2,13 +2,13 @@ import { useState, useEffect } from 'react';
 import { Box, Heading, Skeleton } from '@chakra-ui/react';
 import { WarningTwoIcon } from '@chakra-ui/icons';
 
-import { usePopularPostsQuery } from 'redux/posts/postsApi';
-
 import Post from 'components/Post';
 
-const PopularPosts = () => {
+import { useSubscriptionPostsQuery } from 'redux/posts/postsApi';
+
+const SubscriptionPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const { data, isSuccess } = usePopularPostsQuery({
+  const { data, isSuccess } = useSubscriptionPostsQuery({
     refetchOnMountOrArgChange: true,
   });
 
@@ -42,4 +42,4 @@ const PopularPosts = () => {
   );
 };
 
-export default PopularPosts;
+export default SubscriptionPage;

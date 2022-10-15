@@ -1,39 +1,88 @@
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { useRef } from 'react';
+import {
+  Button,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { GoPlus, GoSignOut } from 'react-icons/go';
 
 import { useLogoutMutation } from 'redux/authorization/authApi';
-import { logOut } from 'redux/authorization/auth-slice';
 
 const UserMenu = () => {
-  const dispatch = useDispatch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
   const [logout] = useLogoutMutation();
 
-  const handleLogout = async () => {
-    await logout();
-    dispatch(logOut());
+  const handleLogout = () => {
+    logout();
+    onClose();
   };
 
   return (
-    <Stack spacing={2} direction="row">
+    <>
       <Button
-        component={Link}
+        display={{ base: 'none', md: 'inline-flex' }}
+        fontSize={'sm'}
+        fontWeight={600}
+        color={'white'}
+        bg={'green.400'}
+        textTransform="uppercase"
+        _hover={{
+          bg: 'green.300',
+        }}
+        leftIcon={<GoPlus />}
+        as={Link}
         to="/add-post"
-        variant="text"
-        sx={{ color: '#fff', outline: '1px solid #fff' }}
       >
         Create post
       </Button>
       <Button
-        variant="outlined"
-        sx={{ color: '#fff' }}
-        onClick={() => handleLogout()}
+        display={{ base: 'none', md: 'inline-flex' }}
+        fontSize={'sm'}
+        fontWeight={600}
+        textTransform="uppercase"
+        color={'white'}
+        bg={'red.600'}
+        _hover={{
+          bg: 'red.500',
+        }}
+        leftIcon={<GoSignOut />}
+        onClick={onOpen}
       >
         Log out
       </Button>
-    </Stack>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Log out
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Are you sure?</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={handleLogout} ml={3}>
+                Log out
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 };
 
