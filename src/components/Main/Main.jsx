@@ -4,6 +4,7 @@ import SecondaryNav from 'components/SecondaryNav';
 import SearchPage from 'pages/SearchPage';
 
 const Main = () => {
+  // eslint-disable-next-line no-unused-vars
   let [searchParams, setSearchParams] = useSearchParams();
   const { postId, tag } = useParams();
 

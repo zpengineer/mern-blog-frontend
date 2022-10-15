@@ -19,6 +19,7 @@ import { useFetchCurrentUserQuery } from 'redux/authorization/authApi';
 
 export const App = () => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  // eslint-disable-next-line no-unused-vars
   const { data, isLoading } = useFetchCurrentUserQuery({
     refetchOnMountOrArgChange: true,
   });

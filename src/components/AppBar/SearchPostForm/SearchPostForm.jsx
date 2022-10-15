@@ -10,6 +10,7 @@ import {
 import { FiSearch } from 'react-icons/fi';
 
 const SearchPostForm = () => {
+  // eslint-disable-next-line no-unused-vars
   let [searchParams, setSearchParams] = useSearchParams();
   const [query, setQuery] = useState('');
 

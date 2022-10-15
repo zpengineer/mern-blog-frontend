@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { Box, List, ListItem, Link, Button } from '@chakra-ui/react';
+import { Box, List, ListItem, Button } from '@chakra-ui/react';
 
 const SecondaryNav = ({ disabledNav }) => {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
