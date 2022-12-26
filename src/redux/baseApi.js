@@ -4,7 +4,7 @@ export const baseApi = createApi({
   reducerPath: 'baseApi',
   tagTypes: ['user', 'blog', 'comments', 'avatar', 'views'],
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://fedorov-blog.herokuapp.com/',
+    baseUrl: 'https://mern-blog-backend-henna.vercel.app/',
     prepareHeaders: (headers, { getState }) => {
       const token = getState().auth.token;
 
